@@ -137,9 +137,17 @@ public class TicTacToeServiceImpl extends UnicastRemoteObject implements TicTacT
     }
 
     @Override
+    public synchronized void leaveGame(String playerId) throws RemoteException {
+        Player player = players.get(playerId);
+        String name = player != null ? player.name : "Gracz";
+        status = GameState.Status.CLOSED;
+        System.out.println("[Serwer] " + name + " opuścił grę. Status: CLOSED.");
+    }
+
+    @Override
     public synchronized void resetGame() throws RemoteException {
-        if (status == GameState.Status.IN_PROGRESS) {
-            throw new RemoteException("Nie można zresetować gry w toku.");
+        if (status == GameState.Status.IN_PROGRESS || status == GameState.Status.CLOSED) {
+            throw new RemoteException("Nie można zresetować gry w toku lub zamkniętej.");
         }
         clearBoard();
         winnerPlayerId = null;

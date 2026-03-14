@@ -28,7 +28,8 @@ public class GameState implements Serializable {
         WAITING_FOR_PLAYER,
         IN_PROGRESS,
         WIN,
-        DRAW
+        DRAW,
+        CLOSED
     }
 
     private final char[][] board;

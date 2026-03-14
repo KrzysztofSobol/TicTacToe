@@ -10,4 +10,6 @@ public interface TicTacToeService extends Remote {
     GameState getGameState(String playerId) throws RemoteException;
     boolean isMyTurn(String playerId) throws RemoteException;
     void resetGame() throws RemoteException;
+
+    void leaveGame(String playerId) throws RemoteException;
 }

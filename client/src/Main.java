@@ -97,8 +97,12 @@ public class Main {
 
         while (keepPlaying) {
             GameState state = game.getGameState(playerId);
-
             GameState.Status status = state.getStatus();
+
+            if (status == GameState.Status.CLOSED) {
+                System.out.println("\nPrzeciwnik zakończył grę. Do zobaczenia!");
+                return;
+            }
 
             if (status == GameState.Status.WIN) {
                 printHeader(mySymbol);
@@ -111,7 +115,7 @@ public class Main {
                 }
 
                 waitingPrinted = false;
-                keepPlaying = askPlayAgain(game, scanner);
+                keepPlaying = askPlayAgain(game, playerId, scanner);
                 continue;
             }
 
@@ -121,7 +125,7 @@ public class Main {
                 System.out.println(">>> REMIS! Nikt nie wygrał. <<<");
 
                 waitingPrinted = false;
-                keepPlaying = askPlayAgain(game, scanner);
+                keepPlaying = askPlayAgain(game, playerId, scanner);
                 continue;
             }
 
@@ -175,21 +179,18 @@ public class Main {
         return new int[]{row, col};
     }
 
-    private static boolean askPlayAgain(TicTacToeService game, Scanner scanner)
+    private static boolean askPlayAgain(TicTacToeService game, String playerId, Scanner scanner)
             throws RemoteException {
         System.out.print("\nZagrać ponownie? [T/N]: ");
         String answer = scanner.nextLine().trim().toLowerCase();
         if (answer.equals("t") || answer.equals("tak") || answer.equals("y")) {
-            try {
-                game.resetGame();
-                System.out.println("[Klient] Gra zresetowana. Nowa partia!");
-                return true;
-            } catch (RemoteException e) {
-                System.out.println("[Info] Reset: " + e.getMessage());
-                return true;
-            }
+            game.resetGame();
+            System.out.println("[Klient] Gra zresetowana. Nowa partia!");
+            return true;
+        } else {
+            game.leaveGame(playerId);
+            return false;
         }
-        return false;
     }
 
     private static void printHeader(char mySymbol) {

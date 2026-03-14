@@ -61,4 +61,11 @@ public interface TicTacToeService extends Remote {
      * @throws RemoteException gdy gra jest jeszcze w toku
      */
     void resetGame() throws RemoteException;
+
+    /**
+     * Kończy grę – ustawia status na CLOSED.
+     * Wywołuje gracz, który nie chce grać ponownie, żeby drugi gracz
+     * mógł wykryć zamknięcie przez polling getGameState().
+     */
+    void leaveGame(String playerId) throws RemoteException;
 }
