@@ -92,17 +92,11 @@ public class Main {
 
     private static void playGame(TicTacToeService game, String playerId, char mySymbol, Scanner scanner)
             throws RemoteException, InterruptedException {
-        boolean keepPlaying = true;
         boolean waitingPrinted = false;
 
-        while (keepPlaying) {
+        while (true) {
             GameState state = game.getGameState(playerId);
             GameState.Status status = state.getStatus();
-
-            if (status == GameState.Status.CLOSED) {
-                System.out.println("\nPrzeciwnik zakończył grę. Do zobaczenia!");
-                return;
-            }
 
             if (status == GameState.Status.WIN) {
                 printHeader(mySymbol);
@@ -113,46 +107,34 @@ public class Main {
                     System.out.println(">>> PRZEGRYWASZ. " + state.getWinnerName()
                             + " (" + state.getWinnerSymbol() + ") wygrywa. <<<");
                 }
-
-                waitingPrinted = false;
-                keepPlaying = askPlayAgain(game, playerId, scanner);
-                continue;
+                return;
             }
 
             if (status == GameState.Status.DRAW) {
                 printHeader(mySymbol);
                 System.out.println(state.renderBoard());
                 System.out.println(">>> REMIS! Nikt nie wygrał. <<<");
-
-                waitingPrinted = false;
-                keepPlaying = askPlayAgain(game, playerId, scanner);
-                continue;
+                return;
             }
 
             if (game.isMyTurn(playerId)) {
                 waitingPrinted = false;
                 printHeader(mySymbol);
                 System.out.println(state.renderBoard());
-
                 int[] move = readMove(scanner);
-                int row = move[0];
-                int col = move[1];
-
-                MoveResult result = game.makeMove(playerId, row, col);
+                MoveResult result = game.makeMove(playerId, move[0], move[1]);
                 if (!result.isValid()) {
                     System.out.println("[!] Nieprawidłowy ruch: " + result.getMessage());
                     pause(600);
                 }
             } else {
-                if(!waitingPrinted){
+                if (!waitingPrinted) {
                     printHeader(mySymbol);
                     System.out.println(state.renderBoard());
-                    System.out.println("Czekam na ruch przeciwnika (" +
-                            (mySymbol == 'X' ? 'O' : 'X') + ")...");
-
+                    System.out.println("Czekam na ruch przeciwnika ("
+                            + (mySymbol == 'X' ? 'O' : 'X') + ")...");
                     waitingPrinted = true;
                 }
-
                 Thread.sleep(POLL_INTERVAL_MS);
             }
         }
@@ -177,20 +159,6 @@ public class Main {
             }
         }
         return new int[]{row, col};
-    }
-
-    private static boolean askPlayAgain(TicTacToeService game, String playerId, Scanner scanner)
-            throws RemoteException {
-        System.out.print("\nZagrać ponownie? [T/N]: ");
-        String answer = scanner.nextLine().trim().toLowerCase();
-        if (answer.equals("t") || answer.equals("tak") || answer.equals("y")) {
-            game.resetGame();
-            System.out.println("[Klient] Gra zresetowana. Nowa partia!");
-            return true;
-        } else {
-            game.leaveGame(playerId);
-            return false;
-        }
     }
 
     private static void printHeader(char mySymbol) {
