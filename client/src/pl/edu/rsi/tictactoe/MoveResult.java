@@ -2,15 +2,6 @@ package pl.edu.rsi.tictactoe;
 
 import java.io.Serializable;
 
-/**
- * Wynik wykonania ruchu, zwracany przez makeMove().
- * Jest serializowalny – przesyłany przez RMI jako kopia (value object).
- *
- * Zawiera:
- * - valid   – czy ruch był poprawny i został zaakceptowany
- * - message – komunikat dla gracza (np. błąd walidacji lub info o stanie)
- * - gameState – aktualny stan gry po ruchu (lub bieżący przy odrzuceniu)
- */
 public class MoveResult implements Serializable {
 
     private static final long serialVersionUID = 1L;

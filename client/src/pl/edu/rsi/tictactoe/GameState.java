@@ -2,28 +2,10 @@ package pl.edu.rsi.tictactoe;
 
 import java.io.Serializable;
 
-/**
- * Reprezentuje stan gry przesyłany przez RMI do klienta.
- * Jest serializowalny - Java RMI przekazuje go przez sieć jako kopię (value object).
- *
- * Zawiera:
- * - planszę 3x3 (znaki: ' ', 'X', 'O')
- * - status gry (enum Status)
- * - symbol gracza, który ma teraz ruch
- * - dane zwycięzcy (jeśli ktoś wygrał)
- * - liczbę podłączonych graczy
- */
 public class GameState implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Status gry:
-     * WAITING_FOR_PLAYER – oczekiwanie na dołączenie drugiego gracza
-     * IN_PROGRESS        – gra w toku
-     * WIN                – ktoś wygrał
-     * DRAW               – remis (wszystkie pola zajęte, brak zwycięzcy)
-     */
     public enum Status {
         WAITING_FOR_PLAYER,
         IN_PROGRESS,
@@ -72,17 +54,6 @@ public class GameState implements Serializable {
         return playerCount;
     }
 
-    /**
-     * Renderuje planszę do czytelnego tekstu z indeksami wierszy i kolumn.
-     * Przykład:
-     *   +---+---+---+
-     * 0 | X | O |   |
-     *   +---+---+---+
-     * 1 |   | X |   |
-     *   +---+---+---+
-     * 2 | O |   | X |
-     *   +---+---+---+
-     */
     public String renderBoard() {
         String separator = "  +---+---+---+";
         StringBuilder sb = new StringBuilder();
