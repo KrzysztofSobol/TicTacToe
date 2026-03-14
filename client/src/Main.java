@@ -90,37 +90,46 @@ public class Main {
         System.out.println("[Klient] Gra rozpoczęta! Plansza 3x3, pozycje: wiersz i kolumna 0–2.");
     }
 
-    private static void playGame(TicTacToeService game, String playerId, char mySymbol,
-                                  Scanner scanner)
+    private static void playGame(TicTacToeService game, String playerId, char mySymbol, Scanner scanner)
             throws RemoteException, InterruptedException {
-
         boolean keepPlaying = true;
+        boolean waitingPrinted = false;
 
         while (keepPlaying) {
             GameState state = game.getGameState(playerId);
-            printHeader(mySymbol);
-            System.out.println(state.renderBoard());
 
             GameState.Status status = state.getStatus();
 
             if (status == GameState.Status.WIN) {
+                printHeader(mySymbol);
+                System.out.println(state.renderBoard());
                 if (state.getWinnerSymbol() == mySymbol) {
                     System.out.println(">>> WYGRYWASZ! Gratulacje, " + state.getWinnerName() + "! <<<");
                 } else {
                     System.out.println(">>> PRZEGRYWASZ. " + state.getWinnerName()
                             + " (" + state.getWinnerSymbol() + ") wygrywa. <<<");
                 }
+
+                waitingPrinted = false;
                 keepPlaying = askPlayAgain(game, scanner);
                 continue;
             }
 
             if (status == GameState.Status.DRAW) {
+                printHeader(mySymbol);
+                System.out.println(state.renderBoard());
                 System.out.println(">>> REMIS! Nikt nie wygrał. <<<");
+
+                waitingPrinted = false;
                 keepPlaying = askPlayAgain(game, scanner);
                 continue;
             }
 
             if (game.isMyTurn(playerId)) {
+                waitingPrinted = false;
+                printHeader(mySymbol);
+                System.out.println(state.renderBoard());
+
                 int[] move = readMove(scanner);
                 int row = move[0];
                 int col = move[1];
@@ -131,8 +140,15 @@ public class Main {
                     pause(600);
                 }
             } else {
-                System.out.println("Czekam na ruch przeciwnika (" +
-                        (mySymbol == 'X' ? 'O' : 'X') + ")...");
+                if(!waitingPrinted){
+                    printHeader(mySymbol);
+                    System.out.println(state.renderBoard());
+                    System.out.println("Czekam na ruch przeciwnika (" +
+                            (mySymbol == 'X' ? 'O' : 'X') + ")...");
+
+                    waitingPrinted = true;
+                }
+
                 Thread.sleep(POLL_INTERVAL_MS);
             }
         }

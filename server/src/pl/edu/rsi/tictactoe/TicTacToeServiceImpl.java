@@ -54,12 +54,8 @@ public class TicTacToeServiceImpl extends UnicastRemoteObject implements TicTacT
 
         if (players.size() == 2) {
             status = GameState.Status.IN_PROGRESS;
-            for (Player p : players.values()) {
-                if (p.symbol == 'X') {
-                    currentPlayerId = p.id;
-                    break;
-                }
-            }
+            currentPlayerId = players.keySet().iterator().next();
+
             System.out.println("[Serwer] Gra rozpoczęta! Ruch gracza X ("
                     + players.get(currentPlayerId).name + ")");
         } else {
