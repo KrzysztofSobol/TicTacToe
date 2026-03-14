@@ -6,25 +6,13 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
 
-/**
- * Punkt wejścia serwera gry kółko i krzyżyk (KKSerwer).
- *
- * Uruchomienie:
- * 1. Pyta o hostname/IP serwera (używany przez klientów do połączenia).
- * 2. Ustawia właściwość java.rmi.server.hostname.
- * 3. Tworzy RMI Registry na porcie 1099.
- * 4. Tworzy i rejestruje obiekt TicTacToeServiceImpl pod nazwą "TicTacToe".
- * 5. Czeka na graczy; wciśnięcie Enter zatrzymuje serwer.
- *
- * Klienci łączą się przez: rmi://<hostname>/TicTacToe
- */
 public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         try {
-            System.out.println("=== KKSerwer – Gra Kółko i Krzyżyk (RMI) ===");
+            System.out.println("=== Gra Kółko i Krzyżyk ===");
             System.out.print("Podaj hostname/IP serwera [localhost]: ");
             String host = scanner.nextLine().trim();
             if (host.isEmpty()) {

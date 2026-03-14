@@ -8,20 +8,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
-/**
- * Punkt wejścia klienta gry kółko i krzyżyk (KKlient).
- *
- * KKlient łączy się z serwerem przez RMI i wywołuje zdalne metody
- * obiektu TicTacToeService (KKSerwer). Cała logika gry jest po stronie
- * serwera; klient odpowiada wyłącznie za:
- * - interfejs konsolowy (wczytywanie ruchów gracza, wyświetlanie planszy)
- * - wysyłanie ruchów do serwera i prezentację wyników
- * - polling – co sekundę sprawdza stan gry gdy czeka na ruch przeciwnika
- *
- * Walidacja po stronie klienta:
- * - sprawdza poprawność formatu wejścia (liczba całkowita 0–2)
- * Ostateczna walidacja zawsze odbywa się na serwerze.
- */
 public class Main {
 
     private static final int POLL_INTERVAL_MS = 1000;
@@ -84,10 +70,6 @@ public class Main {
         scanner.nextLine();
     }
 
-    /**
-     * Czeka, aż gra przejdzie ze stanu WAITING_FOR_PLAYER do IN_PROGRESS.
-     * Wyświetla komunikat co sekundę.
-     */
     private static void waitForGameStart(TicTacToeService game, String playerId)
             throws RemoteException, InterruptedException {
         System.out.println("[Klient] Oczekiwanie na drugiego gracza...");
@@ -108,14 +90,6 @@ public class Main {
         System.out.println("[Klient] Gra rozpoczęta! Plansza 3x3, pozycje: wiersz i kolumna 0–2.");
     }
 
-    /**
-     * Główna pętla gry. W każdej iteracji:
-     * 1. Pobiera aktualny stan gry z serwera.
-     * 2. Wyświetla planszę.
-     * 3. Jeśli gra zakończona – pokazuje wynik i pyta o reset.
-     * 4. Jeśli jest kolej gracza – wczytuje ruch i wysyła do serwera.
-     * 5. Jeśli czeka na ruch przeciwnika – polling co sekundę.
-     */
     private static void playGame(TicTacToeService game, String playerId, char mySymbol,
                                   Scanner scanner)
             throws RemoteException, InterruptedException {
@@ -164,13 +138,6 @@ public class Main {
         }
     }
 
-    /**
-     * Wczytuje ruch gracza z konsoli.
-     * Walidacja po stronie klienta: sprawdza czy wejście to liczba całkowita 0–2.
-     * Ostateczna walidacja (zajętość pola, kolejność) odbywa się na serwerze.
-     *
-     * @return int[2] z {row, col}
-     */
     private static int[] readMove(Scanner scanner) {
         int row = -1, col = -1;
         boolean valid = false;
@@ -192,15 +159,6 @@ public class Main {
         return new int[]{row, col};
     }
 
-    /**
-     * Po zakończeniu gry pyta gracza o reset.
-     * Jeśli gracz odpowie 'T', wywołuje resetGame() na serwerze.
-     * Jeśli odpowie 'N', kończy grę.
-     *
-     * Uwaga: reset działa poprawnie gdy obaj gracze nadal są połączeni.
-     *
-     * @return true jeśli gra ma być kontynuowana, false jeśli należy wyjść
-     */
     private static boolean askPlayAgain(TicTacToeService game, Scanner scanner)
             throws RemoteException {
         System.out.print("\nZagrać ponownie? [T/N]: ");

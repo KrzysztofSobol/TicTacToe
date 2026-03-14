@@ -50,8 +50,7 @@ public class TicTacToeServiceImpl extends UnicastRemoteObject implements TicTacT
         Player player = new Player(playerId, playerName, symbol);
         players.put(playerId, player);
 
-        System.out.println("[Serwer] " + playerName + " dołączył jako '" + symbol
-                + "' (ID: " + playerId.substring(0, 8) + "...)");
+        System.out.println("[Serwer] " + playerName + " dołączył jako '" + symbol + "' (ID: " + playerId.substring(0, 8) + "...)");
 
         if (players.size() == 2) {
             status = GameState.Status.IN_PROGRESS;
