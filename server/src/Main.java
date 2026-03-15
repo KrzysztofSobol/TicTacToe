@@ -12,8 +12,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         try {
-            System.out.println("=== Gra Kółko i Krzyżyk ===");
-            System.out.print("Podaj hostname/IP serwera [localhost]: ");
+            System.out.println("=== KKSerwer - Gra Kółko i Krzyżyk ===");
+            System.out.print("Podaj IP serwera [localhost]: ");
             String host = scanner.nextLine().trim();
             if (host.isEmpty()) {
                 host = "localhost";

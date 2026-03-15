@@ -15,9 +15,9 @@ public class Main {
     public static void  main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== KKlient – Gra Kółko i Krzyżyk (RMI) ===");
+        System.out.println("=== KKlient – Gra Kółko i Krzyżyk ===");
 
-        System.out.print("Podaj hostname/IP serwera [localhost]: ");
+        System.out.print("Podaj IP serwera [localhost]: ");
         String host = scanner.nextLine().trim();
         if (host.isEmpty()) host = "localhost";
 
